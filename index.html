@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="box">
+        <input placeholder="seach here" style="width: 100%;padding:10px;border:2px green solid" type="search" name="" id="GetPostByUserId" maxlength="1">
+        <br>
+        <div id="posts"></div>
+    </div>
+
+    <script>
+        const GetApiUrl = "https://jsonplaceholder.typicode.com/posts";
+        function GetAllPosts(GetApiUrl)
+        {
+            fetch(GetApiUrl)
+            .then(res => {
+             return res.json();
+              
+            }).then(posts => {
+                //console.log(posts[0].userId);
+                 const GetAllPostsResponse  = document.getElementById("posts")
+                 posts.forEach(post => {
+                    GetAllPostsResponse.innerHTML += `
+                    
+
+                    <div style="border:2px red solid; padding:10px ; margin:10px">
+                        
+                        <h1 onClick="ViewPost(${post.id})">${post.title}</h1>
+                        <p>${post.body}</p>
+                        <a style="color:red; padding: 10px; background-color:blue">User Id : ${post.userId}</a>
+                    
+                    </div>
+                    
+                    
+                    `;
+                 })
+
+            }).catch(err =>{
+                console.log("Error: ", err);
+          
+            })
+        }
+        GetAllPosts(GetApiUrl)
+
+        function ViewPost(postId)
+        {
+          fetch(`${GetApiUrl}/${postId}`)
+          .then(res =>{
+            return res.json();
+          }).then(singlePost => {
+            window.open(`post.html?id=${singlePost.id}`)
+          })
+        }
+
+        let GetPostByUserId = document.getElementById("GetPostByUserId")
+        GetPostByUserId.addEventListener("keyup", () => {
+
+            if(GetPostByUserId.value != "")
+            {
+                fetch(`${GetApiUrl}?userId=${GetPostByUserId.value}`)
+                .then(res => {
+                    return res.json()
+                }).then(GetAllPostsByUserId =>{
+
+                    const GetAllPostsResponse  = document.getElementById("posts")
+                    GetAllPostsResponse.innerHTML = "";
+                    GetAllPostsByUserId.forEach(post => {
+                        GetAllPostsResponse.innerHTML += `
+                        
+    
+                        <div style="border:2px red solid; padding:10px ; margin:10px">
+                            
+                            <h1 onClick="ViewPost(${post.id})">${post.title}</h1>
+                            <p>${post.body}</p>
+                            <a style="color:red; padding: 10px; background-color:blue">User Id : ${post.userId}</a>
+                        
+                        </div>
+                        
+                        
+                        `;
+                     })
+
+
+                }).catch(err =>{
+                    console.log("Error: ", err);
+                })
+
+            }
+            else {
+                const GetAllPostsResponse  = document.getElementById("posts")
+                GetAllPostsResponse.innerHTML = "";
+                GetAllPosts(GetApiUrl)
+            }
+        })
+        //https://jsonplaceholder.typicode.com/posts?userId=1
+
+    </script>
+</body>
+</html>

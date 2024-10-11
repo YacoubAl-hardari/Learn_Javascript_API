@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div id="GetPost"></div>
+    </div>
+
+    <script>
+        const url = new URLSearchParams(window.location.search);
+        let GetId = url.get("id");
+
+     fetch(`https://jsonplaceholder.typicode.com/posts/${GetId}`)
+     .then(res => {
+        return res.json();
+
+     }).then(GetPost =>{
+        document.getElementById("GetPost").innerHTML = `
+            <div style="border:2px red solid; padding:10px ; margin:10px">
+                        
+                        <h1>${GetPost.title}</h1>
+                        <p>${GetPost.body}</p>
+                        <a style="color:red; padding: 10px; background-color:blue">User Id : ${GetPost.userId}</a>
+                    
+                    </div>
+        `;
+
+     }).catch(err => {
+        console.log("Error fetching data" . Error)
+     
+     })
+    </script>
+</body>
+</html>
